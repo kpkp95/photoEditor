@@ -1,4 +1,4 @@
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
 
 export const store = mutation({
@@ -17,8 +17,6 @@ export const store = mutation({
       )
       .unique();
 
-    const now = Math.floor(Date.now()); // Ensure integer timestamp
-
     if (user !== null) {
       // If we've seen this identity before but the name has changed, patch the value.
       if (user.name !== identity.name) {
@@ -27,31 +25,26 @@ export const store = mutation({
       return user._id;
     }
 
-    // Log the data being inserted for debugging
-    const userData = {
+    // If it's a new identity, create a new `User`.
+    return await ctx.db.insert("users", {
       name: identity.name ?? "Anonymous",
       tokenIdentifier: identity.tokenIdentifier,
       email: identity.email,
       imageUrl: identity.pictureUrl,
-      plan: "free",
-      projectsUsed: 0,
+      plan: "free", // Default plan
+      projectsUsed: 0, // Initialize usage counters
       exportsThisMonth: 0,
-      createdAt: now,
-      lastActiveAt: now,
-    };
-    console.log("Inserting new user:", userData);
-
-    // If it's a new identity, create a new `User`.
-    return await ctx.db.insert("users", userData);
+      createdAt: Date.now(),
+      lastActiveAt: Date.now(),
+    });
   },
 });
 
-export const getCurrentUser = query({
+export const getCurrentUser = internalQuery({
+  args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
+    if (!identity) return null;
 
     const user = await ctx.db
       .query("users")
@@ -60,10 +53,6 @@ export const getCurrentUser = query({
       )
       .unique();
 
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    return user;
+    return user ?? null;
   },
 });
