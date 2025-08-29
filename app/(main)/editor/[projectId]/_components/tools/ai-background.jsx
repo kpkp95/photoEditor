@@ -16,6 +16,7 @@ import {
 import { HexColorPicker } from "react-colorful";
 import { useCanvas } from "@/context/context";
 import { FabricImage } from "fabric";
+import { toast } from "sonner";
 
 // Unsplash API configuration
 const UNSPLASH_ACCESS_KEY = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
@@ -85,7 +86,7 @@ export function BackgroundControls({ project }) {
       console.log("Background removed successfully");
     } catch (error) {
       console.error("Error removing background:", error);
-      alert("Failed to remove background. Please try again.");
+      toast.error("Failed to remove background. Please try again.");
     } finally {
       setProcessingMessage(null);
     }
@@ -94,7 +95,7 @@ export function BackgroundControls({ project }) {
   // Set canvas background color
   const handleColorBackground = () => {
     if (!canvasEditor) return;
-
+    canvasEditor.backgroundColor = null;
     // In Fabric.js 6.7, set property directly and render
     canvasEditor.backgroundColor = backgroundColor;
     canvasEditor.requestRenderAll();
@@ -131,7 +132,7 @@ export function BackgroundControls({ project }) {
       setUnsplashImages(data.results || []);
     } catch (error) {
       console.error("Error searching Unsplash:", error);
-      alert("Failed to search images. Please try again.");
+      toast.error("Failed to search images. Please try again.");
     } finally {
       setIsSearching(false);
     }
@@ -190,7 +191,8 @@ export function BackgroundControls({ project }) {
       });
     } catch (error) {
       console.error("Error setting background image:", error);
-      alert("Failed to set background image. Please try again.");
+      toast.error("Failed to set background image. Please try again.");
+
       setSelectedImageId(null);
     }
   };
