@@ -8,6 +8,7 @@ import { useCanvas } from "@/context/context";
 import { FabricImage } from "fabric";
 import { useConvexMutation } from "@/hooks/use-convex-query";
 import { api } from "@/convex/_generated/api";
+import { toast } from "sonner";
 
 const DIRECTIONS = [
   { key: "top", label: "Top", icon: ArrowUp },
@@ -223,9 +224,7 @@ export function AIExtenderControls({ project }) {
           </h4>
           <div className="text-xs text-white/70 space-y-1">
             <div>
-              Current:{" "}
-              {Math.round(currentImage.width * (currentImage.scaleX || 1))} ×{" "}
-              {Math.round(currentImage.height * (currentImage.scaleY || 1))}px
+              Current: {Math.round(currentImage.width * (currentImage.scaleX || 1))} × {Math.round(currentImage.height * (currentImage.scaleY || 1))}px
             </div>
             <div className="text-cyan-400">
               Extended: {newWidth} × {newHeight}px
@@ -234,8 +233,7 @@ export function AIExtenderControls({ project }) {
               Canvas: {project.width} × {project.height}px (unchanged)
             </div>
             <div className="text-cyan-300">
-              Direction:{" "}
-              {DIRECTIONS.find((d) => d.key === selectedDirection)?.label}
+              Direction: {DIRECTIONS.find((d) => d.key === selectedDirection)?.label}
             </div>
           </div>
         </div>
@@ -255,11 +253,10 @@ export function AIExtenderControls({ project }) {
       {/* Instructions */}
       <div className="bg-slate-700/30 rounded-lg p-3">
         <p className="text-xs text-white/70">
-          <strong>How it works:</strong> Select one direction → Set amount →
-          Apply extension. AI will intelligently fill the new area in that
-          direction.
+          <strong>How it works:</strong> Select one direction → Set amount → Apply extension. AI will intelligently fill the new area in that direction.
         </p>
       </div>
     </div>
   );
 }
+

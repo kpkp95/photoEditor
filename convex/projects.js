@@ -1,11 +1,11 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import { internal } from "./_generated/api";
+import { api } from "./_generated/api";
 
 // Get all projects for the current user
 export const getUserProjects = query({
   handler: async (ctx) => {
-    const user = await ctx.runQuery(internal.users.getCurrentUser);
+    const user = await ctx.runQuery(api.users.getCurrentUser);
 
     if (!user) return [];
 
@@ -32,7 +32,7 @@ export const create = mutation({
     canvasState: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
-    const user = await ctx.runQuery(internal.users.getCurrentUser);
+    const user = await ctx.runQuery(api.users.getCurrentUser);
 
     // Check plan limits for free users
     if (user.plan === "free") {
@@ -76,7 +76,7 @@ export const create = mutation({
 export const getProject = query({
   args: { projectId: v.id("projects") },
   handler: async (ctx, args) => {
-    const user = await ctx.runQuery(internal.users.getCurrentUser);
+    const user = await ctx.runQuery(api.users.getCurrentUser);
 
     const project = await ctx.db.get(args.projectId);
     if (!project) {
@@ -95,7 +95,7 @@ export const getProject = query({
 export const deleteProject = mutation({
   args: { projectId: v.id("projects") },
   handler: async (ctx, args) => {
-    const user = await ctx.runQuery(internal.users.getCurrentUser);
+    const user = await ctx.runQuery(api.users.getCurrentUser);
 
     const project = await ctx.db.get(args.projectId);
     if (!project) {
@@ -132,7 +132,7 @@ export const updateProject = mutation({
     backgroundRemoved: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const user = await ctx.runQuery(internal.users.getCurrentUser);
+    const user = await ctx.runQuery(api.users.getCurrentUser);
 
     const project = await ctx.db.get(args.projectId);
     if (!project) {

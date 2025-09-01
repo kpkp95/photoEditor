@@ -16,6 +16,7 @@ import { useCanvas } from "@/context/context";
 import { FabricImage } from "fabric";
 import { useConvexMutation } from "@/hooks/use-convex-query";
 import { api } from "@/convex/_generated/api";
+import { toast } from "sonner";
 
 const RETOUCH_PRESETS = [
   {
@@ -54,10 +55,11 @@ const RETOUCH_PRESETS = [
 
 export function AIEdit({ project }) {
   const { canvasEditor, setProcessingMessage } = useCanvas();
-  const [selectedPreset, setSelectedPreset] = useState("ai_retouch"); // Fixed default
+  const [selectedPreset, setSelectedPreset] = useState("ai_retouch");
   const { mutate: updateProject } = useConvexMutation(
     api.projects.updateProject
   );
+
   const hasActiveTransformations =
     project.activeTransformations?.includes("e-retouch");
   const selectedPresetData = RETOUCH_PRESETS.find(
@@ -78,12 +80,10 @@ export function AIEdit({ project }) {
       const existingTr = params.get("tr");
 
       if (existingTr) {
-        // Append retouch to existing transformations
         return `${baseUrl}?tr=${existingTr},${preset.transform}`;
       }
     }
 
-    // No existing transformations, create new
     return `${baseUrl}?tr=${preset.transform}`;
   };
 
@@ -106,7 +106,6 @@ export function AIEdit({ project }) {
         crossOrigin: "anonymous",
       });
 
-      // Preserve current image properties
       const imageProps = {
         left: mainImage.left,
         top: mainImage.top,
@@ -119,7 +118,6 @@ export function AIEdit({ project }) {
         evented: true,
       };
 
-      // Replace image
       canvasEditor.remove(mainImage);
       retouchedImage.set(imageProps);
       canvasEditor.add(retouchedImage);
@@ -127,7 +125,6 @@ export function AIEdit({ project }) {
       canvasEditor.setActiveObject(retouchedImage);
       canvasEditor.requestRenderAll();
 
-      // Update project
       await updateProject({
         projectId: project._id,
         currentImageUrl: retouchedUrl,
@@ -142,7 +139,6 @@ export function AIEdit({ project }) {
     }
   };
 
-  // Early returns
   if (!canvasEditor) {
     return <div className="p-4 text-white/70 text-sm">Canvas not ready</div>;
   }
@@ -166,15 +162,12 @@ export function AIEdit({ project }) {
 
   return (
     <div className="space-y-6">
-      {/* Status Indicator */}
       {hasActiveTransformations && (
         <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
           <div className="flex items-start gap-3">
             <CheckCircle className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
             <div>
-              <h3 className="text-green-400 font-medium mb-1">
-                Image Enhanced
-              </h3>
+              <h3 className="text-green-400 font-medium mb-1">Image Enhanced</h3>
               <p className="text-green-300/80 text-sm">
                 AI enhancements have been applied to this image
               </p>
@@ -183,7 +176,6 @@ export function AIEdit({ project }) {
         </div>
       )}
 
-      {/* Preset Selection */}
       <div>
         <h3 className="text-sm font-medium text-white mb-3">
           Choose Enhancement Style
@@ -211,7 +203,7 @@ export function AIEdit({ project }) {
                     </h4>
                     {preset.recommended && (
                       <span className="px-1.5 py-0.5 bg-cyan-500 text-white text-xs rounded-full">
-                        ★
+                        Recommended
                       </span>
                     )}
                   </div>
@@ -229,36 +221,24 @@ export function AIEdit({ project }) {
         </div>
       </div>
 
-      {/* Apply Button */}
       <Button onClick={applyRetouch} className="w-full" variant="primary">
         <Wand2 className="h-4 w-4 mr-2" />
         Apply {selectedPresetData?.label}
       </Button>
 
-      {/* Information */}
       <div className="bg-slate-700/30 rounded-lg p-4">
         <h4 className="text-sm font-medium text-white mb-2 flex items-center gap-2">
           <Info className="h-4 w-4" />
           How AI Retouch Works
         </h4>
         <div className="space-y-2 text-xs text-white/70">
-          <p>
-            • <strong>AI Retouch:</strong> AI analyzes and applies optimal
-            improvements
-          </p>
-          <p>
-            • <strong>Smart Processing:</strong> Preserves details while
-            enhancing quality
-          </p>
-          <p>
-            • <strong>Multiple Styles:</strong> Choose enhancement that fits
-            your image
-          </p>
-          <p>
-            • <strong>Instant Results:</strong> See improvements in seconds
-          </p>
+          <p>- <strong>AI Retouch:</strong> AI analyzes and applies optimal improvements</p>
+          <p>- <strong>Smart Processing:</strong> Preserves details while enhancing quality</p>
+          <p>- <strong>Multiple Styles:</strong> Choose enhancement that fits your image</p>
+          <p>- <strong>Instant Results:</strong> See improvements in seconds</p>
         </div>
       </div>
     </div>
   );
 }
+

@@ -11,7 +11,7 @@ import {
   Eye,
 } from "lucide-react";
 import { AdjustControls } from "./_tools/adjust";
-import { BackgroundControls } from "./_tools/background-controls";
+import { BackgroundControls } from "./_tools/ai-background";
 import { useCanvas } from "@/context/context";
 import { TextControls } from "./_tools/text";
 import { AIExtenderControls } from "./_tools/ai-extend";

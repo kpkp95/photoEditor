@@ -172,7 +172,7 @@ export function TextControls() {
     }
 
     canvasEditor.requestRenderAll();
-    setChanged((c) => c + 1); // 👈 force rerender to update buttons
+    setChanged((c) => c + 1); // force re-render to update buttons
   };
 
   if (!canvasEditor) {
@@ -338,3 +338,7 @@ export function TextControls() {
     </div>
   );
 }
+
+
+
+

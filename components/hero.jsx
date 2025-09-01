@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Crop, Expand, Sliders, Wand2 } from "lucide-react";
 
 const HeroSection = () => {
   const [textVisible, setTextVisible] = useState(false);
   const [demoHovered, setDemoHovered] = useState(false);
+
   useEffect(() => {
     const timer = setTimeout(() => setTextVisible(true), 500);
     return () => clearTimeout(timer);
   }, []);
+
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
       <div className="text-center z-10 px-6">
@@ -27,23 +30,19 @@ const HeroSection = () => {
             colors, remove backgrounds, and enhance your images with
             cutting-edge technology.
           </p>
+
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
             <Link href="/dashboard">
-              <Button variant="primary" size="xl">
-                Start Creating
-              </Button>
+              <Button variant="primary" size="xl">Start Creating</Button>
             </Link>
-            <Button variant="glass" size="xl">
-              Watch Demo
-            </Button>
+            <Button variant="glass" size="xl">Watch Demo</Button>
           </div>
         </div>
-        {/*Demo interface*/}
+
+        {/* Demo interface */}
         <div
           className={`relative max-w-4xl mx-auto transition-all duration-1000 ${
-            textVisible
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-20"
+            textVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
           } ${demoHovered ? "transform scale-105 rotate-y-6" : ""}`}
           onMouseEnter={() => setDemoHovered(true)}
           onMouseLeave={() => setDemoHovered(false)}
@@ -57,23 +56,23 @@ const HeroSection = () => {
                   <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                 </div>
-                <div className="text-gray-400 text-sm">Pixxel Pro</div>
+                <div className="text-gray-400 text-sm">ApertureAI Pro</div>
               </div>
 
               <div className="grid grid-cols-4 gap-4 mb-6">
                 {[
-                  { icon: "✂️", label: "Crop" },
-                  { icon: "📐", label: "Resize" },
-                  { icon: "🎨", label: "Adjust" },
-                  { icon: "🤖", label: "AI Tools" },
-                ].map((tool, index) => (
+                  { Icon: Crop, label: "Crop" },
+                  { Icon: Expand, label: "Resize" },
+                  { Icon: Sliders, label: "Adjust" },
+                  { Icon: Wand2, label: "AI Tools" },
+                ].map(({ Icon, label }, index) => (
                   <div
                     key={index}
                     className="backdrop-blur-lg bg-white/5 rounded-xl p-4 text-center hover:bg-white/10 transition-all cursor-pointer"
-                    title={tool.label}
+                    title={label}
                   >
-                    <div className="text-2xl mb-1">{tool.icon}</div>
-                    <div className="text-xs text-gray-400">{tool.label}</div>
+                    <Icon className="h-5 w-5 mx-auto mb-1" />
+                    <div className="text-xs text-gray-400">{label}</div>
                   </div>
                 ))}
               </div>
@@ -92,3 +91,4 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
+
