@@ -28,13 +28,15 @@ const Header = () => {
     <header className="fixed top-6 left-1/2 -translate-x-1/2 z-50 text-nowrap">
       <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-full px-8 py-3 flex items-center justify-between gap-8">
         <Link href="/" className="mr-10 md:mr-20">
-          <Image
-            src="/logo-text.png"
-            alt="Logo"
-            className="min-w-24 object-cover"
-            width={96}
-            height={24}
-          />
+          <span className="inline-flex items-center rounded-md bg-cyan-500/15 px-2 py-1">
+            <Image
+              src="/logo-text.png"
+              alt="Logo"
+              className="min-w-32 object-cover"
+              width={108}
+              height={24}
+            />
+          </span>
         </Link>
         {path === "/" && (
           <div className="hidden md:flex space-x-6">
